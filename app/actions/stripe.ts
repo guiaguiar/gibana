@@ -213,7 +213,8 @@ export async function createCheckoutSession(
       locale: "pt-BR",
     };
 
-    // If customer is logged in, associate the session with their customer ID
+    // If customer ID is provided, associate the session with their customer ID
+    // Note: With Stripe-hosted approach, customers are created during checkout
     if (customerId) {
       sessionParams.customer = customerId;
       sessionParams.customer_update = {
@@ -239,77 +240,63 @@ export async function createCheckoutSession(
   }
 }
 
-export interface Subscription {
-  id: string;
-  status: string;
-  current_period_start: number;
-  current_period_end: number;
-  cancel_at_period_end: boolean;
-  product: {
-    id: string;
-    name: string;
-    description: string | null;
-  };
-  price: {
-    id: string;
-    amount: number;
-    currency: string;
-    interval: string | null;
-  };
-}
-
 /**
- * Server action to get user's active subscriptions
- * @param customerId - Stripe customer ID
- * @returns Array of active subscriptions
+ * Server action to handle subscription management via Stripe Customer Portal
+ * Uses email lookup to find customer in Stripe (Stripe is the source of truth)
+ * @param email - User's email address
+ * @returns Portal session URL or error message
  */
-export async function getUserSubscriptions(
-  customerId: string
-): Promise<Subscription[]> {
+export async function handleManageSubscription(
+  email: string
+): Promise<{ url: string | null; error: string | null }> {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
     }
 
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
-      status: "all", // Get all subscriptions (active, past_due, canceled, etc.)
-      expand: ["data.default_payment_method", "data.items.data.price.product"],
-    });
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    return subscriptions.data.map((sub) => {
-      const price = sub.items.data[0]?.price;
-      const product =
-        typeof price?.product === "string"
-          ? null
-          : (price?.product as Stripe.Product | null);
-
-      // Access properties with type assertion to avoid TypeScript issues
-      const currentPeriodStart = (sub as any).current_period_start as number;
-      const currentPeriodEnd = (sub as any).current_period_end as number;
-      const cancelAtPeriodEnd = (sub as any).cancel_at_period_end as boolean;
-
+    // Validate email format
+    if (!email || !email.includes("@")) {
       return {
-        id: sub.id,
-        status: sub.status,
-        current_period_start: currentPeriodStart || 0,
-        current_period_end: currentPeriodEnd || 0,
-        cancel_at_period_end: cancelAtPeriodEnd || false,
-        product: {
-          id: product?.id || "",
-          name: product?.name || "Unknown Product",
-          description: product?.description || null,
-        },
-        price: {
-          id: price?.id || "",
-          amount: price?.unit_amount || 0,
-          currency: price?.currency || "brl",
-          interval: price?.recurring?.interval || null,
-        },
+        url: null,
+        error: "Por favor, insira um email válido.",
       };
+    }
+
+    // Search for customer by email (Stripe is our only database)
+    const customers = await stripe.customers.list({
+      email: email.trim().toLowerCase(),
+      limit: 1,
     });
+
+    if (customers.data.length === 0) {
+      return {
+        url: null,
+        error: "Nenhum cliente encontrado. Você precisa ter uma assinatura ativa para gerenciar sua conta. Por favor, assine primeiro!",
+      };
+    }
+
+    const customer = customers.data[0];
+
+    // Create billing portal session
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customer.id,
+      return_url: `${baseUrl}/minha-conta`,
+    });
+
+    return {
+      url: portalSession.url,
+      error: null,
+    };
   } catch (error) {
-    console.error("Error fetching user subscriptions:", error);
-    return [];
+    console.error("Error creating billing portal session:", error);
+    return {
+      url: null,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Falha ao criar sessão do portal. Tente novamente.",
+    };
   }
 }

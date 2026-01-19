@@ -10,13 +10,13 @@ import ImageCard from "@/app/components/ImageCard";
 import ExplanationCard from "@/app/components/ExplanationCard";
 import TypewriterText from "@/app/components/TypewriterText";
 import IconButton from "@/app/components/IconButton";
+import StripePricingTable from "@/app/components/StripePricingTable";
 import {
   getStripeProducts,
   getStripePrice,
   createCheckoutSession,
   type StripeProduct,
 } from "@/app/actions/stripe";
-import { getCurrentUser, signOut, type AuthResult } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -30,10 +30,6 @@ export default function Home() {
   const [showExplanationCard, setShowExplanationCard] = useState(false);
   const [stripeProducts, setStripeProducts] = useState<StripeProduct[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<AuthResult["user"] | null>(
-    null
-  );
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const isTypingComplete = firstTextComplete && secondTextComplete;
 
@@ -52,19 +48,6 @@ export default function Home() {
       document.body.style.overflow = "";
     };
   }, [isTypingComplete]);
-
-  // Fetch current user on mount
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const user = await getCurrentUser();
-        setCurrentUser(user);
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      }
-    }
-    fetchUser();
-  }, []);
 
   // Fetch Stripe products on mount
   useEffect(() => {
@@ -96,12 +79,6 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const handleLogout = async () => {
-    await signOut();
-    setCurrentUser(null);
-    setUserMenuOpen(false);
-  };
-
   const handleCheckout = async (product: StripeProduct) => {
     if (!product.default_price) {
       alert("Produto sem preço configurado");
@@ -109,10 +86,8 @@ export default function Home() {
     }
 
     try {
-      const result = await createCheckoutSession(
-        product.default_price,
-        currentUser?.stripeCustomerId || null
-      );
+      // No customer ID needed - Stripe will handle customer creation during checkout
+      const result = await createCheckoutSession(product.default_price, null);
 
       if (result.error) {
         alert(`Erro: ${result.error}`);
@@ -127,21 +102,6 @@ export default function Home() {
       alert("Erro ao processar checkout. Tente novamente.");
     }
   };
-
-  // Close user menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (userMenuOpen) {
-        const target = event.target as HTMLElement;
-        if (!target.closest(".user-menu-container")) {
-          setUserMenuOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [userMenuOpen]);
 
   // Helper function to format price from product
   const formatPrice = (product: StripeProduct): string => {
@@ -198,48 +158,13 @@ export default function Home() {
   return (
     <div className="px-8">
       <div className="flex items-center justify-between pb-10 pt-4">
-        <div className="relative user-menu-container">
-          {currentUser ? (
-            <div className="relative">
-              <IconButton
-                icon="solar:user-broken"
-                aria-label="User menu"
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-              />
-              {userMenuOpen && (
-                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] z-10">
-                  <div className="px-4 py-2 border-b border-gray-200">
-                    <p className="font-semibold text-sm">{currentUser.name}</p>
-                    <p className="text-xs text-gray-500">{currentUser.email}</p>
-                  </div>
-                  <a
-                    href="/minha-conta"
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    Minha Conta
-                  </a>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
-                  >
-                    Sair
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <IconButton
-              icon="solar:user-broken"
-              aria-label="Login"
-              onClick={() => router.push("/entrar")}
-            />
-          )}
-        </div>
-        <Image src={logo} alt="logo" width={100} height={100} />
         <IconButton
-          icon="iconamoon:shopping-bag-light"
-          aria-label="Shopping bag"
+          icon="solar:user-broken"
+          aria-label="Gerenciar assinatura"
+          onClick={() => router.push("/minha-conta")}
         />
+        <Image src={logo} alt="logo" width={100} height={100} />
+        <div className="w-8" /> {/* Spacer for centering */}
       </div>
 
       <div className="flex flex-col items-center md:items-center gap-4 h-[104px]">
@@ -413,6 +338,12 @@ export default function Home() {
         }`}
       >
         <ExplanationCard />
+      </div>
+
+      {/* Stripe Pricing Table */}
+      <div className="py-8">
+        <h2 className="text-3xl font-bold text-center mb-8">Assine Agora</h2>
+        <StripePricingTable />
       </div>
     </div>
   );
