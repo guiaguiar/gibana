@@ -155,14 +155,20 @@ export default function Home() {
   }, [isTypingComplete]);
 
   return (
-    <div className="px-8">
+    <div className="px-4 md:px-8">
       <div className="flex items-center justify-between pb-10 pt-4">
         <IconButton
           icon="solar:user-broken"
           aria-label="Gerenciar assinatura"
           onClick={() => router.push("/minha-conta")}
         />
-        <Image src={logo} alt="logo" width={100} height={100} />
+        <Image
+          src={logo}
+          alt="logo"
+          width={100}
+          height={100}
+          className="w-[60px] h-[60px] md:w-[100px] md:h-[100px]"
+        />
         <div className="w-8" /> {/* Spacer for centering */}
       </div>
 
@@ -184,11 +190,11 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 pt-8">
+      <div className="flex flex-col md:flex-row md:gap-8 gap-4 pt-8">
         {/* First Single Product Card */}
         {singleProducts[0] ? (
           <div
-            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+            className={`flex flex-col  md:gap-8 gap-4 flex-1 transition-all duration-700 ease-out ${
               showFirstCard
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4 pointer-events-none"
@@ -211,7 +217,7 @@ export default function Home() {
           </div>
         ) : (
           <div
-            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+            className={`flex flex-col md:gap-8 gap-4 flex-1 transition-all duration-700 ease-out ${
               showFirstCard
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4 pointer-events-none"
@@ -255,7 +261,7 @@ export default function Home() {
           </div>
         ) : (
           <div
-            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+            className={`flex flex-col md:gap-8 gap-4 flex-1 transition-all duration-700 ease-out ${
               showSecondCard
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4 pointer-events-none"
@@ -283,10 +289,10 @@ export default function Home() {
           }`}
         >
           <div className="py-10">
-            <span className="text-gray-700 text-3xl font-medium">
+            <span className="text-gray-700 text-xl md:text-3xl font-medium">
               Próxima data de envio:{" "}
             </span>
-            <span className="text-brown text-3xl font-extrabold">
+            <span className="text-brown text-xl md:text-3xl font-extrabold">
               15 de fevereiro
             </span>
           </div>

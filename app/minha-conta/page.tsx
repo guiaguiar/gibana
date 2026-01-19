@@ -37,14 +37,20 @@ export default function MinhaContaPage() {
   return (
     <div className="px-8 py-8 min-h-screen">
       <div className="flex items-center justify-center pb-10 pt-4">
-        <Image src={logo} alt="logo" width={100} height={100} />
+        <Image
+          src={logo}
+          alt="logo"
+          width={100}
+          height={100}
+          className="w-[60px] h-[60px] md:w-[100px] md:h-[100px]"
+        />
       </div>
 
       <div className="max-w-md mx-auto">
-        <h1 className="text-4xl font-bold mb-4 text-center">
+        <h1 className="text-2xl md:text-4xl font-bold mb-4 text-center">
           Gerenciar Assinatura
         </h1>
-        <p className="text-gray-600 mb-8 text-center">
+        <p className="text-sm md:text-base text-gray-600 mb-8 text-center">
           Digite seu email para acessar o portal de cobrança da Stripe e
           gerenciar sua assinatura, método de pagamento e histórico de faturas.
         </p>

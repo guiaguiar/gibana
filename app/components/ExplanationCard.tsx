@@ -15,13 +15,21 @@ export default function ExplanationCard() {
                 O que é um Print Club?
               </h3>
             </div>
-            <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
-              Print Club é um clube de assinatura mensal, onde você recebe todos
-              os meses uma carta por correio com o print A5 de uma arte e outros
-              itens feitos e projetados todos por mim, Gibana. A ideia é tornar
-              a minha arte mais acessível e você receber algo exclusivo e
-              original.
-            </p>
+            <div className="flex items-start gap-3">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-brown shrink-0" />
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
+                Print Club é um clube de assinatura mensal, onde você recebe
+                todos os meses uma carta por correio com o print A5 de uma arte
+                e outros itens feitos e projetados todos por mim, Gibana.
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-brown shrink-0" />
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
+                A ideia é tornar a minha arte mais acessível e você receber algo
+                exclusivo e original.
+              </p>
+            </div>
           </div>
 
           {/* Section: Como funciona o envio? */}
@@ -31,12 +39,21 @@ export default function ExplanationCard() {
                 Como funciona o envio?
               </h3>
             </div>
-            <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
-              As correspondências serão enviadas até o dia 15 de cada mês. Você
-              deve se inscrever até o dia 12 do mês, para receber a impressão
-              daquele mês. O frete é grátis para todo o Brasil, para manter o
-              valor acessível as cartas não incluem informações de rastreamento.
-            </p>
+            <div className="flex items-start gap-3">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-brown shrink-0" />
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
+                As correspondências serão enviadas até o dia 15 de cada mês.
+                Você deve se inscrever até o dia 12 do mês, para receber a
+                impressão daquele mês.
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="mt-1.5 h-2 w-2 rounded-full bg-brown shrink-0" />
+              <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl">
+                O frete é grátis para todo o Brasil, para manter o valor
+                acessível as cartas não incluem informações de rastreamento.
+              </p>
+            </div>
           </div>
 
           {/* Section: Vocês aceitam reembolso e devoluções? */}
@@ -69,10 +86,6 @@ export default function ExplanationCard() {
             </div>
           </div>
         </div>
-
-        {/* Decorative corner elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brown/5 to-transparent rounded-bl-full opacity-50" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-brown/5 to-transparent rounded-tr-full opacity-50" />
       </div>
     </div>
   );
