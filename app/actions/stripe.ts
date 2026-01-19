@@ -174,3 +174,142 @@ export async function getStripePrice(
     return null;
   }
 }
+
+/**
+ * Server action to create a Stripe Checkout session
+ * @param priceId - The Stripe price ID
+ * @param customerId - Optional Stripe customer ID (if user is logged in)
+ * @returns Checkout session URL
+ */
+export async function createCheckoutSession(
+  priceId: string,
+  customerId?: string | null
+): Promise<{ url: string | null; error: string | null }> {
+  try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+    // Fetch price to determine if it's recurring or one-time
+    const price = await stripe.prices.retrieve(priceId);
+    const isRecurring = !!price.recurring;
+    const mode: "subscription" | "payment" = isRecurring
+      ? "subscription"
+      : "payment";
+
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
+      mode,
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: `${baseUrl}/minha-conta?success=true`,
+      cancel_url: `${baseUrl}?canceled=true`,
+      locale: "pt-BR",
+    };
+
+    // If customer is logged in, associate the session with their customer ID
+    if (customerId) {
+      sessionParams.customer = customerId;
+      sessionParams.customer_update = {
+        address: "auto",
+      };
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
+
+    return {
+      url: session.url,
+      error: null,
+    };
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    return {
+      url: null,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to create checkout session",
+    };
+  }
+}
+
+export interface Subscription {
+  id: string;
+  status: string;
+  current_period_start: number;
+  current_period_end: number;
+  cancel_at_period_end: boolean;
+  product: {
+    id: string;
+    name: string;
+    description: string | null;
+  };
+  price: {
+    id: string;
+    amount: number;
+    currency: string;
+    interval: string | null;
+  };
+}
+
+/**
+ * Server action to get user's active subscriptions
+ * @param customerId - Stripe customer ID
+ * @returns Array of active subscriptions
+ */
+export async function getUserSubscriptions(
+  customerId: string
+): Promise<Subscription[]> {
+  try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
+    }
+
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: "all", // Get all subscriptions (active, past_due, canceled, etc.)
+      expand: ["data.default_payment_method", "data.items.data.price.product"],
+    });
+
+    return subscriptions.data.map((sub) => {
+      const price = sub.items.data[0]?.price;
+      const product =
+        typeof price?.product === "string"
+          ? null
+          : (price?.product as Stripe.Product | null);
+
+      // Access properties with type assertion to avoid TypeScript issues
+      const currentPeriodStart = (sub as any).current_period_start as number;
+      const currentPeriodEnd = (sub as any).current_period_end as number;
+      const cancelAtPeriodEnd = (sub as any).cancel_at_period_end as boolean;
+
+      return {
+        id: sub.id,
+        status: sub.status,
+        current_period_start: currentPeriodStart || 0,
+        current_period_end: currentPeriodEnd || 0,
+        cancel_at_period_end: cancelAtPeriodEnd || false,
+        product: {
+          id: product?.id || "",
+          name: product?.name || "Unknown Product",
+          description: product?.description || null,
+        },
+        price: {
+          id: price?.id || "",
+          amount: price?.unit_amount || 0,
+          currency: price?.currency || "brl",
+          interval: price?.recurring?.interval || null,
+        },
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching user subscriptions:", error);
+    return [];
+  }
+}

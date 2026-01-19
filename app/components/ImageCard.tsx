@@ -10,6 +10,7 @@ interface ImageCardProps {
   kitInfo?: string;
   buttonText?: string;
   showPrintClub?: boolean;
+  onButtonClick?: () => void;
 }
 
 export default function ImageCard({
@@ -21,6 +22,7 @@ export default function ImageCard({
   kitInfo,
   buttonText,
   showPrintClub = true,
+  onButtonClick,
 }: ImageCardProps) {
   return (
     <div className="relative w-full h-[400px] rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl">
@@ -43,11 +45,11 @@ export default function ImageCard({
 
       {/* Default text - visible by default, hidden on hover */}
       <div className="gap-2 absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0">
-        <span className="text-white font-bold text-5xl z-10 whitespace-nowrap [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)]">
+        <span className="text-white font-bold text-4xl md:text-5xl z-10 [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)] uppercase text-center">
           {text}
         </span>
         {showPrintClub && (
-          <span className="text-white font-bold text-5xl z-10 whitespace-nowrap [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)]">
+          <span className="text-white font-bold text-4xl md:text-5xl z-10 [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)]">
             PRINT CLUB
           </span>
         )}
@@ -72,7 +74,15 @@ export default function ImageCard({
             )}
 
             {buttonText && (
-              <button className="cursor-pointer font-bold mt-2 h-[40px] pr-8 pl-8 rounded-2xl bg-green-gibana text-white hover:brightness-105 transition-all">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onButtonClick) {
+                    onButtonClick();
+                  }
+                }}
+                className="cursor-pointer font-bold mt-2 h-[40px] pr-8 pl-8 rounded-2xl bg-green-gibana text-white hover:brightness-105 transition-all"
+              >
                 {buttonText}
               </button>
             )}

@@ -6,7 +6,7 @@
 
 @theme inline {
   --color-background: var(--background);
-  --font-sans: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
+  --font-sans: var(--font-questrial), sans-serif;
   --color-primary: var(--background);
   --color-brown: #99623b;
   --color-green-gibana: #82bd6a;
@@ -22,9 +22,4 @@
 
 body {
   background: var(--background);
-  font-family: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
-}
-
-* {
-  font-family: "Century Gothic", "CenturyGothic", "AppleGothic", sans-serif;
 }

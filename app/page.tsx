@@ -13,10 +13,14 @@ import IconButton from "@/app/components/IconButton";
 import {
   getStripeProducts,
   getStripePrice,
+  createCheckoutSession,
   type StripeProduct,
 } from "@/app/actions/stripe";
+import { getCurrentUser, signOut, type AuthResult } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [firstTextComplete, setFirstTextComplete] = useState(false);
   const [secondTextComplete, setSecondTextComplete] = useState(false);
   const [showFirstCard, setShowFirstCard] = useState(false);
@@ -26,8 +30,41 @@ export default function Home() {
   const [showExplanationCard, setShowExplanationCard] = useState(false);
   const [stripeProducts, setStripeProducts] = useState<StripeProduct[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<AuthResult["user"] | null>(
+    null
+  );
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const isTypingComplete = firstTextComplete && secondTextComplete;
+
+  // Disable scrolling during typing animation
+  useEffect(() => {
+    if (!isTypingComplete) {
+      // Disable scrolling while typing
+      document.body.style.overflow = "hidden";
+    } else {
+      // Re-enable scrolling when typing is complete
+      document.body.style.overflow = "";
+    }
+
+    // Cleanup: re-enable scrolling on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isTypingComplete]);
+
+  // Fetch current user on mount
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+    fetchUser();
+  }, []);
 
   // Fetch Stripe products on mount
   useEffect(() => {
@@ -58,6 +95,53 @@ export default function Home() {
     }
     fetchProducts();
   }, []);
+
+  const handleLogout = async () => {
+    await signOut();
+    setCurrentUser(null);
+    setUserMenuOpen(false);
+  };
+
+  const handleCheckout = async (product: StripeProduct) => {
+    if (!product.default_price) {
+      alert("Produto sem preço configurado");
+      return;
+    }
+
+    try {
+      const result = await createCheckoutSession(
+        product.default_price,
+        currentUser?.stripeCustomerId || null
+      );
+
+      if (result.error) {
+        alert(`Erro: ${result.error}`);
+        return;
+      }
+
+      if (result.url) {
+        window.location.href = result.url;
+      }
+    } catch (error) {
+      console.error("Error creating checkout:", error);
+      alert("Erro ao processar checkout. Tente novamente.");
+    }
+  };
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuOpen) {
+        const target = event.target as HTMLElement;
+        if (!target.closest(".user-menu-container")) {
+          setUserMenuOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [userMenuOpen]);
 
   // Helper function to format price from product
   const formatPrice = (product: StripeProduct): string => {
@@ -114,7 +198,43 @@ export default function Home() {
   return (
     <div className="px-8">
       <div className="flex items-center justify-between pb-10 pt-4">
-        <IconButton icon="solar:user-broken" aria-label="User" />
+        <div className="relative user-menu-container">
+          {currentUser ? (
+            <div className="relative">
+              <IconButton
+                icon="solar:user-broken"
+                aria-label="User menu"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+              />
+              {userMenuOpen && (
+                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-[200px] z-10">
+                  <div className="px-4 py-2 border-b border-gray-200">
+                    <p className="font-semibold text-sm">{currentUser.name}</p>
+                    <p className="text-xs text-gray-500">{currentUser.email}</p>
+                  </div>
+                  <a
+                    href="/minha-conta"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    Minha Conta
+                  </a>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    Sair
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <IconButton
+              icon="solar:user-broken"
+              aria-label="Login"
+              onClick={() => router.push("/entrar")}
+            />
+          )}
+        </div>
         <Image src={logo} alt="logo" width={100} height={100} />
         <IconButton
           icon="iconamoon:shopping-bag-light"
@@ -162,6 +282,7 @@ export default function Home() {
               description={singleProducts[0].description || undefined}
               kitInfo={singleProducts[0].metadata.kitInfo || undefined}
               buttonText={formatPrice(singleProducts[0])}
+              onButtonClick={() => handleCheckout(singleProducts[0])}
             />
           </div>
         ) : (
@@ -205,6 +326,7 @@ export default function Home() {
               description={singleProducts[1].description || undefined}
               kitInfo={singleProducts[1].metadata.kitInfo || undefined}
               buttonText={formatPrice(singleProducts[1])}
+              onButtonClick={() => handleCheckout(singleProducts[1])}
             />
           </div>
         ) : (
@@ -268,6 +390,7 @@ export default function Home() {
             kitInfo={multiProduct.metadata.kitInfo || undefined}
             buttonText={formatPrice(multiProduct)}
             showPrintClub={false}
+            onButtonClick={() => handleCheckout(multiProduct)}
           />
         ) : (
           <ImageCard
