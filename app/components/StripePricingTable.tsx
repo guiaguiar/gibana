@@ -25,7 +25,8 @@ export default function StripePricingTable() {
     return (
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
         <p className="text-yellow-800">
-          Por favor, configure NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY e NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID no arquivo .env.local
+          Por favor, configure NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY e
+          NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID no arquivo .env.local
         </p>
       </div>
     );
@@ -41,4 +42,3 @@ export default function StripePricingTable() {
     </div>
   );
 }
-

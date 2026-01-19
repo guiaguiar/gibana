@@ -10,7 +10,6 @@ import ImageCard from "@/app/components/ImageCard";
 import ExplanationCard from "@/app/components/ExplanationCard";
 import TypewriterText from "@/app/components/TypewriterText";
 import IconButton from "@/app/components/IconButton";
-import StripePricingTable from "@/app/components/StripePricingTable";
 import {
   getStripeProducts,
   getStripePrice,
@@ -338,12 +337,6 @@ export default function Home() {
         }`}
       >
         <ExplanationCard />
-      </div>
-
-      {/* Stripe Pricing Table */}
-      <div className="py-8">
-        <h2 className="text-3xl font-bold text-center mb-8">Assine Agora</h2>
-        <StripePricingTable />
       </div>
     </div>
   );

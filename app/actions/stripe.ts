@@ -273,7 +273,8 @@ export async function handleManageSubscription(
     if (customers.data.length === 0) {
       return {
         url: null,
-        error: "Nenhum cliente encontrado. Você precisa ter uma assinatura ativa para gerenciar sua conta. Por favor, assine primeiro!",
+        error:
+          "Nenhum cliente encontrado. Você precisa ter uma assinatura ativa para gerenciar sua conta. Por favor, assine primeiro!",
       };
     }
 

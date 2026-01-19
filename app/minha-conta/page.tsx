@@ -41,12 +41,18 @@ export default function MinhaContaPage() {
       </div>
 
       <div className="max-w-md mx-auto">
-        <h1 className="text-4xl font-bold mb-4 text-center">Gerenciar Assinatura</h1>
+        <h1 className="text-4xl font-bold mb-4 text-center">
+          Gerenciar Assinatura
+        </h1>
         <p className="text-gray-600 mb-8 text-center">
-          Digite seu email para acessar o portal de cobrança da Stripe e gerenciar sua assinatura, método de pagamento e histórico de faturas.
+          Digite seu email para acessar o portal de cobrança da Stripe e
+          gerenciar sua assinatura, método de pagamento e histórico de faturas.
         </p>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-lg shadow-md p-6 space-y-4"
+        >
           <div>
             <label
               htmlFor="email"
@@ -103,4 +109,3 @@ export default function MinhaContaPage() {
     </div>
   );
 }
-
