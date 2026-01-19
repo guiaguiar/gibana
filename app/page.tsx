@@ -170,7 +170,7 @@ export default function Home() {
         <TypewriterText
           text="Algo feito à mão para você esperar todo mês."
           className="text-2xl font-bold"
-          speed={50}
+          speed={25}
           delay={0}
           onComplete={() => setFirstTextComplete(true)}
         />
@@ -178,8 +178,8 @@ export default function Home() {
         <TypewriterText
           text="Com carinho, gibana."
           className="text-left md:text-center w-full md:w-auto"
-          speed={50}
-          delay={2000}
+          speed={25}
+          delay={1200}
           onComplete={() => setSecondTextComplete(true)}
         />
       </div>
