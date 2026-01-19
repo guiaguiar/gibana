@@ -5,11 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "@/public/logo.png";
 import IconButton from "@/app/components/IconButton";
-import {
-  getCurrentUser,
-  signOut,
-  type AuthResult,
-} from "@/app/actions/auth";
+import { getCurrentUser, signOut, type AuthResult } from "@/app/actions/auth";
 import { getUserSubscriptions, type Subscription } from "@/app/actions/stripe";
 
 export default function MinhaContaPage() {
@@ -97,7 +93,8 @@ export default function MinhaContaPage() {
 
   const getStatusColor = (status: string): string => {
     if (status === "active") return "text-green-600 bg-green-50";
-    if (status === "past_due" || status === "unpaid") return "text-red-600 bg-red-50";
+    if (status === "past_due" || status === "unpaid")
+      return "text-red-600 bg-red-50";
     if (status === "canceled") return "text-gray-600 bg-gray-50";
     return "text-yellow-600 bg-yellow-50";
   };
@@ -209,7 +206,9 @@ export default function MinhaContaPage() {
                           )}
                         </div>
                         <div>
-                          <span className="font-medium">Próximo pagamento:</span>{" "}
+                          <span className="font-medium">
+                            Próximo pagamento:
+                          </span>{" "}
                           {formatDate(subscription.current_period_end)}
                         </div>
                       </div>
@@ -238,4 +237,3 @@ export default function MinhaContaPage() {
     </div>
   );
 }
-

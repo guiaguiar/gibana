@@ -42,14 +42,9 @@ export default function ImageCard({
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only handle card click on mobile/tablet, and only if not clicking on the button
+  const handleCardClick = () => {
     if (isMobileOrTablet && title) {
-      const target = e.target as HTMLElement;
-      // Don't expand/collapse if clicking on the button or its children
-      if (!target.closest("button")) {
-        setIsExpanded(!isExpanded);
-      }
+      setIsExpanded(!isExpanded);
     }
   };
 
@@ -156,12 +151,11 @@ export default function ImageCard({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
                   if (onButtonClick) {
                     onButtonClick();
                   }
                 }}
-                className="cursor-pointer font-bold mt-2 h-[40px] pr-8 pl-8 rounded-2xl bg-green-gibana text-white hover:brightness-105 transition-all z-20 relative"
+                className="cursor-pointer font-bold mt-2 h-[40px] pr-8 pl-8 rounded-2xl bg-green-gibana text-white hover:brightness-105 transition-all"
               >
                 {buttonText}
               </button>

@@ -11,7 +11,9 @@ export interface User {
   createdAt: string;
 }
 
-const DATA_DIR = join(process.cwd(), "data");
+// Use /tmp in serverless environments (Vercel), otherwise use project data directory
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const DATA_DIR = isServerless ? "/tmp/data" : join(process.cwd(), "data");
 const USERS_FILE = join(DATA_DIR, "users.json");
 
 /**
@@ -53,7 +55,9 @@ async function writeUsers(users: User[]): Promise<void> {
  */
 export async function getUserByEmail(email: string): Promise<User | null> {
   const users = await readUsers();
-  return users.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null;
+  return (
+    users.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null
+  );
 }
 
 /**
@@ -111,4 +115,3 @@ export async function updateUser(
 
   return users[index];
 }
-
