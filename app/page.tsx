@@ -10,6 +10,11 @@ import ImageCard from "@/app/components/ImageCard";
 import ExplanationCard from "@/app/components/ExplanationCard";
 import TypewriterText from "@/app/components/TypewriterText";
 import IconButton from "@/app/components/IconButton";
+import {
+  getStripeProducts,
+  getStripePrice,
+  type StripeProduct,
+} from "@/app/actions/stripe";
 
 export default function Home() {
   const [firstTextComplete, setFirstTextComplete] = useState(false);
@@ -19,8 +24,69 @@ export default function Home() {
   const [showDateSection, setShowDateSection] = useState(false);
   const [showThirdCard, setShowThirdCard] = useState(false);
   const [showExplanationCard, setShowExplanationCard] = useState(false);
+  const [stripeProducts, setStripeProducts] = useState<StripeProduct[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
 
   const isTypingComplete = firstTextComplete && secondTextComplete;
+
+  // Fetch Stripe products on mount
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const products = await getStripeProducts();
+        console.log("📦 Stripe Products fetched:", products);
+        console.log("📦 Number of products:", products.length);
+        products.forEach((product, index) => {
+          console.log(`\n📦 Product ${index + 1}:`, {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            images: product.images,
+            price_amount: product.price_amount,
+            price_currency: product.price_currency,
+            price_interval: product.price_interval,
+            metadata: product.metadata,
+          });
+        });
+        setStripeProducts(products);
+      } catch (error) {
+        console.error("Failed to fetch Stripe products:", error);
+        // Continue with hardcoded products if Stripe fetch fails
+      } finally {
+        setProductsLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  // Helper function to format price from product
+  const formatPrice = (product: StripeProduct): string => {
+    if (!product.price_amount) return "";
+    const amount = product.price_amount / 100; // Convert from cents
+    if (product.price_interval === "month") {
+      return `Assinar por R$${amount.toFixed(2)}/mês`;
+    } else {
+      // One-time payment
+      return `Comprar por R$${amount.toFixed(2)}`;
+    }
+  };
+
+  // Filter products by type
+  const singleProducts = stripeProducts.filter(
+    (p) => p.metadata.type === "single"
+  );
+  const multiProduct = stripeProducts.find((p) => p.metadata.type === "multi");
+
+  // Helper to extract short text from product name (e.g., "FILLER" from "Filer Print Club")
+  const getShortText = (name: string): string => {
+    // Remove common suffixes like "(PRÉ-VENDA)"
+    const cleanName = name.replace(/\s*\([^)]*\)\s*/g, "").trim();
+    // Extract first word or key word
+    if (cleanName.toLowerCase().includes("filler")) return "FILLER";
+    if (cleanName.toLowerCase().includes("subtext")) return "SUBTEXT";
+    // Fallback: use first word in uppercase
+    return cleanName.split(" ")[0].toUpperCase();
+  };
 
   useEffect(() => {
     if (isTypingComplete) {
@@ -47,7 +113,7 @@ export default function Home() {
 
   return (
     <div className="px-8">
-      <div className="flex items-center justify-between pb-10">
+      <div className="flex items-center justify-between pb-10 pt-4">
         <IconButton icon="solar:user-broken" aria-label="User" />
         <Image src={logo} alt="logo" width={100} height={100} />
         <IconButton
@@ -56,7 +122,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col items-center md:items-center gap-4 pb-8 h-[104px]">
+      <div className="flex flex-col items-center md:items-center gap-4 h-[104px]">
         <TypewriterText
           text="Algo feito à mão para você esperar todo mês."
           className="text-2xl font-bold"
@@ -74,42 +140,92 @@ export default function Home() {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div
-          className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
-            showFirstCard
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4 pointer-events-none"
-          }`}
-        >
-          <ImageCard
-            image={background1}
-            alt="background1"
-            text="FILLER"
-            title="Filler Print Club"
-            description="Um clube com pinturas dos seus animes favoritos em seus episódios fillers - fazendo coisas do dia a dia."
-            kitInfo="Kit: print A5 + carta + cartela de adesivos"
-            buttonText="Assinar por R$35/mês"
-          />
-        </div>
+      <div className="flex flex-col md:flex-row gap-8 pt-8">
+        {/* First Single Product Card */}
+        {singleProducts[0] ? (
+          <div
+            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+              showFirstCard
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4 pointer-events-none"
+            }`}
+          >
+            <ImageCard
+              image={
+                singleProducts[0].images && singleProducts[0].images.length > 0
+                  ? singleProducts[0].images[0]
+                  : null
+              }
+              alt={singleProducts[0].metadata.title || ""}
+              text={getShortText(singleProducts[0].metadata.title || "")}
+              title={singleProducts[0].metadata.title || ""}
+              description={singleProducts[0].description || undefined}
+              kitInfo={singleProducts[0].metadata.kitInfo || undefined}
+              buttonText={formatPrice(singleProducts[0])}
+            />
+          </div>
+        ) : (
+          <div
+            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+              showFirstCard
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4 pointer-events-none"
+            }`}
+          >
+            <ImageCard
+              image={background1}
+              alt="background1"
+              text="FILLER"
+              title="Filler Print Club"
+              description="Um clube com pinturas dos seus animes favoritos em seus episódios fillers - fazendo coisas do dia a dia."
+              kitInfo="Kit: print A5 + carta + cartela de adesivos"
+              buttonText="Assinar por R$35/mês"
+            />
+          </div>
+        )}
 
-        <div
-          className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
-            showSecondCard
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4 pointer-events-none"
-          }`}
-        >
-          <ImageCard
-            image={background2}
-            alt="background2"
-            text="SUBTEXT"
-            title="Subtext Print Club"
-            description="Pinturas à oleo repletas de sentimentos."
-            kitInfo="Kit: print A5 + carta + adesivo de vinil"
-            buttonText="Assinar por R$35/mês"
-          />
-        </div>
+        {/* Second Single Product Card */}
+        {singleProducts[1] ? (
+          <div
+            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+              showSecondCard
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4 pointer-events-none"
+            }`}
+          >
+            <ImageCard
+              image={
+                singleProducts[1].images && singleProducts[1].images.length > 0
+                  ? singleProducts[1].images[0]
+                  : null
+              }
+              alt={singleProducts[1].metadata.title || ""}
+              text={getShortText(singleProducts[1].metadata.title || "")}
+              title={singleProducts[1].metadata.title || ""}
+              description={singleProducts[1].description || undefined}
+              kitInfo={singleProducts[1].metadata.kitInfo || undefined}
+              buttonText={formatPrice(singleProducts[1])}
+            />
+          </div>
+        ) : (
+          <div
+            className={`flex flex-col gap-8 flex-1 transition-all duration-700 ease-out ${
+              showSecondCard
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4 pointer-events-none"
+            }`}
+          >
+            <ImageCard
+              image={background2}
+              alt="background2"
+              text="SUBTEXT"
+              title="Subtext Print Club"
+              description="Pinturas à oleo repletas de sentimentos."
+              kitInfo="Kit: print A5 + carta + adesivo de vinil"
+              buttonText="Assinar por R$35/mês"
+            />
+          </div>
+        )}
       </div>
 
       <div className="py-6 md:py-14 flex justify-center">
@@ -138,15 +254,32 @@ export default function Home() {
             : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
-        <ImageCard
-          image={background3}
-          alt="background3"
-          text="O melhor dos dois mundos"
-          title="Subtext Print Club"
-          description="Duas cartas todo mês, uma do Filler Print Club e uma do Subtext Print Club, para você que assim como eu gosta tanto de animes quanto da beleza ta tinta a óleo"
-          buttonText="Assinar por R$65/mês"
-          showPrintClub={false}
-        />
+        {multiProduct ? (
+          <ImageCard
+            image={
+              multiProduct.images && multiProduct.images.length > 0
+                ? multiProduct.images[0]
+                : null
+            }
+            alt={multiProduct.metadata.title || ""}
+            text="O melhor dos dois mundos"
+            title={multiProduct.metadata.title || ""}
+            description={multiProduct.description || undefined}
+            kitInfo={multiProduct.metadata.kitInfo || undefined}
+            buttonText={formatPrice(multiProduct)}
+            showPrintClub={false}
+          />
+        ) : (
+          <ImageCard
+            image={background3}
+            alt="background3"
+            text="O melhor dos dois mundos"
+            title="Subtext Print Club"
+            description="Duas cartas todo mês, uma do Filler Print Club e uma do Subtext Print Club, para você que assim como eu gosta tanto de animes quanto da beleza ta tinta a óleo"
+            buttonText="Assinar por R$65/mês"
+            showPrintClub={false}
+          />
+        )}
       </div>
 
       <div

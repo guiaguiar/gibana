@@ -2,7 +2,7 @@ import Image from "next/image";
 import { StaticImageData } from "next/image";
 
 interface ImageCardProps {
-  image: StaticImageData;
+  image: StaticImageData | string | null;
   alt: string;
   text: string;
   title?: string;
@@ -25,7 +25,17 @@ export default function ImageCard({
   return (
     <div className="relative w-full h-[400px] rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl">
       <div className="absolute inset-0 transition-all duration-300 group-hover:blur-xs">
-        <Image src={image} alt={alt} fill className="object-cover" />
+        {image ? (
+          <Image
+            src={image}
+            alt={alt}
+            fill
+            className="object-cover"
+            {...(typeof image === "string" && { unoptimized: true })}
+          />
+        ) : (
+          <div className="w-full h-full bg-white" />
+        )}
       </div>
 
       {/* Dark overlay on hover */}
