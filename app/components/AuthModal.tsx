@@ -83,7 +83,7 @@ export default function AuthModal({
       <div className="bg-white rounded-lg p-8 w-full max-w-md mx-4 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-1"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 p-1 cursor-pointer"
           aria-label="Fechar"
         >
           <svg
@@ -184,7 +184,7 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-brown text-white py-2 px-4 rounded-md hover:bg-brown/90 focus:outline-none focus:ring-2 focus:ring-brown focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-brown text-white py-2 px-4 rounded-md hover:bg-brown/90 focus:outline-none focus:ring-2 focus:ring-brown focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
           >
             {loading ? "Processando..." : isSignUp ? "Criar Conta" : "Entrar"}
           </button>
@@ -193,7 +193,7 @@ export default function AuthModal({
         <div className="mt-6 text-center">
           <button
             onClick={switchMode}
-            className="text-sm text-gray-600 hover:text-brown transition-colors"
+            className="text-sm text-gray-600 hover:text-brown transition-colors cursor-pointer"
           >
             {isSignUp
               ? "Já tem uma conta? Entrar"

@@ -133,13 +133,13 @@ export default function MinhaContaPage() {
               </div>
               <button
                 onClick={() => router.push("/")}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Voltar para início
               </button>
               <button
                 onClick={handleLogout}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Sair
               </button>
@@ -175,7 +175,7 @@ export default function MinhaContaPage() {
               </p>
               <button
                 onClick={() => router.push("/")}
-                className="bg-brown text-white px-6 py-2 rounded-md hover:bg-brown/90 transition-colors"
+                className="bg-brown text-white px-6 py-2 rounded-md hover:bg-brown/90 transition-colors cursor-pointer"
               >
                 Ver Produtos
               </button>
