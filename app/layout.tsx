@@ -32,7 +32,29 @@ const distrampler = localFont({
 
 export const metadata: Metadata = {
   title: "Gibana",
-  description: "Gibana - Print Club",
+  description:
+    "Algo feito à mão para você esperar todo mês. Com carinho, gibana.",
+  openGraph: {
+    title: "Gibana - Print Club",
+    description:
+      "Algo feito à mão para você esperar todo mês. Com carinho, gibana.",
+    type: "website",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Gibana - Print Club",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gibana - Print Club",
+    description:
+      "Algo feito à mão para você esperar todo mês. Com carinho, gibana.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
