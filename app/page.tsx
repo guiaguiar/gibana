@@ -39,7 +39,7 @@ export default async function Home() {
             você esperar todo mês
           </span>
           <span
-            className="font-normal text-[32px]"
+            className="font-normal text-[32px] md:pt-[24px]"
             style={{ fontFamily: "var(--font-annie), sans-serif" }}
           >
             Com carinho, gibana.
