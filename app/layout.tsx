@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Josefin_Sans } from "next/font/google";
+import { Josefin_Sans, Annie_Use_Your_Telescope } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -10,10 +10,17 @@ const josefinSans = Josefin_Sans({
   variable: "--font-josefin-sans",
 });
 
+const annieUseYourTelescope = Annie_Use_Your_Telescope({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-annie",
+});
+
 const distrampler = localFont({
   src: [
     {
-      path: "../public/fonts/Distrampler-Regular.ttf",
+      path: "../public/fonts/Distrampler-Regular.otf",
       weight: "400",
       style: "normal",
     },
@@ -36,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${josefinSans.variable} ${distrampler.variable}`}
+      className={`${josefinSans.variable} ${distrampler.variable} ${annieUseYourTelescope.variable}`}
     >
       <body
         className={`${josefinSans.className} antialiased`}

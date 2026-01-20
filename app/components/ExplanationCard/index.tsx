@@ -22,7 +22,7 @@ function AccordionItem({
         className="w-full py-6 text-left flex items-center justify-between gap-4 hover:opacity-80 transition-opacity cursor-pointer"
         aria-expanded={isOpen}
       >
-        <h3 className="font-bold text-xl md:text-2xl text-brown flex-1">
+        <h3 className="font-normal text-xl md:text-3xl text-brown flex-1">
           {question}
         </h3>
         <svg
@@ -152,9 +152,9 @@ export default function ExplanationCard() {
       className="w-full md:py-[150px] py-[50px]"
       style={{ backgroundColor: "#FCECCB" }}
     >
-      <div className="max-w-4xl mx-auto px-4 md:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-brown mb-8 md:mb-12 md:text-left text-center">
-          Perguntas Frequentes
+      <div className="max-w-[1132px] mx-auto px-4 md:px-8">
+        <h2 className="text-3xl md:text-4xl font-normal text-[#4B575E] mb-8 md:mb-12 md:text-left text-center">
+          <span className="font-bold">Perguntas</span> Frequentes
         </h2>
         <div className="bg-white/50 rounded-2xl p-6 md:p-8 shadow-lg">
           {faqItems.map((item, index) => (

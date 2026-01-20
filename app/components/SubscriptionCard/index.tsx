@@ -1,4 +1,8 @@
+"use client";
+
 import Image, { StaticImageData } from "next/image";
+import { useState } from "react";
+import { createCheckoutSession } from "@/app/actions/stripe";
 
 interface SubscriptionCardProps {
   image: StaticImageData | string | null;
@@ -6,6 +10,7 @@ interface SubscriptionCardProps {
   title: string;
   price: number;
   kitInfo: string;
+  priceId: string | null;
 }
 
 const SubscriptionCard = ({
@@ -14,7 +19,35 @@ const SubscriptionCard = ({
   title,
   price,
   kitInfo,
+  priceId,
 }: SubscriptionCardProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChoose = async () => {
+    if (!priceId) {
+      alert("Preço não disponível para este produto.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { url, error } = await createCheckoutSession(priceId);
+
+      if (error) {
+        alert(`Erro ao criar sessão de checkout: ${error}`);
+        return;
+      }
+
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      alert("Erro ao processar. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="relative flex flex-col shadow-lg rounded-[20px] max-w-[416px] w-full">
       {/* Image section */}
@@ -25,6 +58,7 @@ const SubscriptionCard = ({
             alt={title}
             fill
             className="object-cover"
+            priority
             {...(typeof image === "string" && { unoptimized: true })}
           />
         ) : (
@@ -47,6 +81,7 @@ const SubscriptionCard = ({
         {image && (
           <div className="absolute inset-0 z-0 overflow-hidden">
             <Image
+              priority
               src={image}
               alt=""
               fill
@@ -81,8 +116,12 @@ const SubscriptionCard = ({
           </div>
 
           {/* Button */}
-          <button className="cursor-pointer w-full py-3 px-4 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors">
-            Escolher
+          <button
+            onClick={handleChoose}
+            disabled={isLoading || !priceId}
+            className="cursor-pointer w-full py-3 px-4 bg-[#007874] text-white font-medium rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Carregando..." : "Escolher"}
           </button>
         </div>
       </div>
