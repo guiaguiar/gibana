@@ -1,0 +1,93 @@
+import Image, { StaticImageData } from "next/image";
+
+interface SubscriptionCardProps {
+  image: StaticImageData | string | null;
+  description: string;
+  title: string;
+  price: number;
+  kitInfo: string;
+}
+
+const SubscriptionCard = ({
+  image,
+  description,
+  title,
+  price,
+  kitInfo,
+}: SubscriptionCardProps) => {
+  return (
+    <div className="relative flex flex-col shadow-lg rounded-[20px] max-w-[416px] w-full">
+      {/* Image section */}
+      <div className="relative w-full aspect-square overflow-hidden rounded-[20px] z-50">
+        {image ? (
+          <Image
+            src={image}
+            alt={title}
+            fill
+            className="object-cover"
+            {...(typeof image === "string" && { unoptimized: true })}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200" />
+        )}
+
+        <div className="absolute bottom-0 left-0 right-0 p-4 pl-10 pr-10 pt-[200px] bg-gradient-to-t from-black/100 to-transparent">
+          <h3 className="block text-white font-semibold text-center text-3xl">
+            {title}
+          </h3>
+          <span className="block text-[16px] text-center text-[#B7C1C7]">
+            {description}
+          </span>
+        </div>
+      </div>
+
+      {/* Price and button section with blurred background */}
+      <div className="relative w-full aspect-square rounded-b-[20px] overflow-hidden bg-white -mt-8">
+        {/* Blurred, zoomed background image */}
+        {image && (
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            <Image
+              src={image}
+              alt=""
+              fill
+              className="object-cover opacity-30"
+              style={{
+                transform: "scale(1.4   )",
+                filter: "blur(10px)",
+              }}
+              {...(typeof image === "string" && { unoptimized: true })}
+            />
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col h-full p-6 justify-between">
+          {/* Price */}
+          <div className="flex justify-center flex-col pt-6">
+            <span className="text-[64px] font-normal text-center">
+              R${price}
+              <span className="text-[20px]">/mês</span>
+            </span>
+
+            <div className="h-[1px] w-full bg-[#9EA9B0]" />
+
+            <ul className="font-normal text-[16px] text-center text-[#4B575E] pt-6 list-disc list-inside space-y-1">
+              {kitInfo.split("+").map((item, index) => (
+                <li key={index} className="text-left">
+                  {item.trim()}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Button */}
+          <button className="cursor-pointer w-full py-3 px-4 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors">
+            Escolher
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SubscriptionCard;

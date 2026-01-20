@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
-import { Questrial } from "next/font/google";
+import { Josefin_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const questrial = Questrial({
+const josefinSans = Josefin_Sans({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-questrial",
+  variable: "--font-josefin-sans",
+});
+
+const distrampler = localFont({
+  src: [
+    {
+      path: "../public/fonts/Distrampler-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-distrampler",
+  display: "swap",
+  fallback: ["sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -20,12 +34,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={questrial.variable}>
+    <html
+      lang="en"
+      className={`${josefinSans.variable} ${distrampler.variable}`}
+    >
       <body
-        className={`${questrial.className} antialiased`}
+        className={`${josefinSans.className} antialiased`}
         suppressHydrationWarning
       >
-        <div className="mx-auto max-w-[964px]">{children}</div>
+        <div className="">{children}</div>
       </body>
     </html>
   );
