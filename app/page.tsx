@@ -6,6 +6,10 @@ import ExplanationCard from "./components/ExplanationCard";
 import UserIcon from "./components/UserIcon";
 import SubscriptionCardsSection from "./components/SubscriptionCardsSection";
 
+// Enable ISR: revalidate every hour (3600 seconds)
+// This allows Stripe data changes to be picked up without rebuilding the app
+export const revalidate = 3600;
+
 export default async function Home() {
   // Fetch products server-side
   const stripeProducts = await getStripeProducts();
