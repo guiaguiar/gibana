@@ -5,6 +5,7 @@ import { getStripeProducts } from "@/app/actions/stripe";
 import ExplanationCard from "./components/ExplanationCard";
 import UserIcon from "./components/UserIcon";
 import SubscriptionCardsSection from "./components/SubscriptionCardsSection";
+import PresentationSection from "./components/PresentationSection";
 
 // Enable ISR: revalidate every hour (3600 seconds)
 // This allows Stripe data changes to be picked up without rebuilding the app
@@ -54,6 +55,8 @@ export default async function Home() {
       <SubscriptionCardsSection products={stripeProducts} />
 
       <ExplanationCard />
+
+      <PresentationSection />
     </div>
   );
 }

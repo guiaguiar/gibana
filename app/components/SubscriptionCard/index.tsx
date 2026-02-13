@@ -106,7 +106,7 @@ const SubscriptionCard = ({
 
             <div className="h-[1px] w-full bg-[#9EA9B0]" />
 
-            <ul className="font-normal text-[16px] text-center text-[#4B575E] pt-6 list-disc list-inside space-y-1">
+            <ul className="font-normal text-[16px] sm:text-[20px] text-center text-[#4B575E] pt-6 list-disc list-inside space-y-1">
               {kitInfo.split("+").map((item, index) => (
                 <li key={index} className="text-left">
                   {item.trim()}
