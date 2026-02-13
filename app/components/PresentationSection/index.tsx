@@ -10,7 +10,7 @@ const PresentationSection = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 ">
         <div className="flex items-center gap-14 py-[120px]">
           <div className="relative min-w-[416px] min-h-[496px] rounded-3xl overflow-hidden">
-            <Image src="/selfie.png" alt="selfie" fill className="object-cover" />
+            <Image src="/selfie.png" alt="selfie" fill className="object-cover object-center" />
           </div>
           <div>
             <h1 className="text-[52px] font-distrampler text-[#99623B] pb-[10px]">Oi, eu sou a gibana.</h1>
