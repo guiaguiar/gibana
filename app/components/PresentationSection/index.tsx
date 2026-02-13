@@ -9,7 +9,7 @@ const PresentationSection = () => {
     <div className="bg-[#FBFBFB] flex flex-col items-center justify-center">
       <div className="max-w-7xl mx-auto px-4 md:px-8 ">
         <div className="flex items-center gap-14 py-[120px]">
-          <div className="relative min-w-[416px] min-h-[496px]">
+          <div className="relative min-w-[416px] min-h-[496px] rounded-3xl overflow-hidden">
             <Image src="/selfie.png" alt="selfie" fill className="object-cover" />
           </div>
           <div>
