@@ -7,7 +7,7 @@ export default function UserIcon() {
   const router = useRouter();
 
   return (
-    <div className="absolute top-[60px] right-0 left-0 z-30 max-w-7xl mx-auto px-4 flex justify-end">
+    <div className="absolute top-[40px] right-0 left-0 z-30 max-w-7xl mx-auto px-4 flex justify-end">
       <div className="flex items-center gap-2 bg-[#007874] rounded-full p-2">
         <IconButton
           icon="solar:user-broken"

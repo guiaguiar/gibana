@@ -32,9 +32,9 @@ export default async function Home() {
         <Image
           src={logo}
           alt="logo"
-          className="absolute z-10 top-8 left-1/2 -translate-x-1/2"
-          width={100}
-          height={100}
+          className="absolute z-10 top-7 left-1/2 -translate-x-1/2"
+          width={86}
+          height={86}
         />
 
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
