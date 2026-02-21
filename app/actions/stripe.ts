@@ -190,7 +190,8 @@ export async function createCheckoutSession(
       throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     // Fetch price to determine if it's recurring or one-time
     const price = await stripe.prices.retrieve(priceId);
@@ -208,17 +209,25 @@ export async function createCheckoutSession(
           quantity: 1,
         },
       ],
+
+      // ✅ Force full billing address + name collection
+      billing_address_collection: "required",
+      shipping_address_collection: {
+        allowed_countries: ["BR"],
+      },
       success_url: `${baseUrl}/minha-conta?success=true`,
       cancel_url: `${baseUrl}?canceled=true`,
       locale: "pt-BR",
     };
 
-    // If customer ID is provided, associate the session with their customer ID
-    // Note: With Stripe-hosted approach, customers are created during checkout
+    // Associate session with existing Stripe customer (if provided)
     if (customerId) {
       sessionParams.customer = customerId;
+
+      // Automatically update customer address with collected data
       sessionParams.customer_update = {
         address: "auto",
+        name: "auto",
       };
     }
 
