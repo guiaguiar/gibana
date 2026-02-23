@@ -62,7 +62,7 @@ export default function MinhaContaPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-lg shadow-md p-6 space-y-4"
+            className="bg-[#fbfbfb] rounded-lg shadow-md p-6 space-y-4"
           >
             <div>
               <label

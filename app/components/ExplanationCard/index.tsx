@@ -26,7 +26,7 @@ function AccordionItem({
     >
       <button
         onClick={onToggle}
-        className="w-full py-6 text-left flex items-center justify-between gap-4 hover:opacity-80 transition-opacity"
+        className="w-full py-6 text-left flex items-center justify-between gap-4 hover:opacity-80 transition-opacity cursor-pointer"
         aria-expanded={isOpen}
       >
         <h3 className="font-normal text-xl md:text-3xl text-brown flex-1">
@@ -130,7 +130,7 @@ export default function ExplanationCard() {
         </motion.h2>
 
         {/* Accordion */}
-        <div className="bg-white/50 rounded-2xl p-6 md:p-8 shadow-lg">
+        <div className="bg-[#fbfbfb]/50 rounded-2xl p-6 md:p-8 shadow-lg">
           {faqItems.map((item, index) => (
             <AccordionItem
               key={index}

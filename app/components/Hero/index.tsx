@@ -9,7 +9,7 @@ import logo from "@/public/logo.png";
 
 const Hero = () => {
   return (
-    <div className="w-full h-screen md:h-[646px] relative overflow-hidden bg-white">
+    <div className="w-full h-screen md:h-[646px] relative overflow-hidden bg-[#fbfbfb]">
       {/* Background */}
       <motion.div
         className="absolute inset-0 z-0"
@@ -38,15 +38,16 @@ const Hero = () => {
         <Image src={logo} alt="logo" width={86} height={86} priority />
       </motion.div>
 
-      {/* User Icon */}
       <motion.div
-        className="absolute z-20 inset-0 flex items-center justify-center"
+        className="absolute z-30 inset-0 flex items-center justify-center cursor-pointer pointer-events-none"
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4 }}
         viewport={{ once: true, amount: 0.3 }}
       >
-        <UserIcon />
+        <div className="cursor-pointer pointer-events-auto">
+          <UserIcon />
+        </div>
       </motion.div>
 
       <HeroTyping />

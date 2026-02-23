@@ -73,7 +73,7 @@ export default function ImageCard({
             {...(typeof image === "string" && { unoptimized: true })}
           />
         ) : (
-          <div className="w-full h-full bg-white" />
+          <div className="w-full h-full bg-[#fbfbfb]" />
         )}
       </div>
 

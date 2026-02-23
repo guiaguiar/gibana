@@ -99,7 +99,7 @@ const SubscriptionCard = ({
       </motion.div>
 
       {/* Price Section */}
-      <div className="relative w-full aspect-square rounded-b-[20px] overflow-hidden bg-white -mt-8">
+      <div className="relative w-full aspect-square rounded-b-[20px] overflow-hidden bg-[#fbfbfb] -mt-8">
         {image && (
           <div className="absolute inset-0 z-0 overflow-hidden">
             <Image

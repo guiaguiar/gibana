@@ -42,7 +42,7 @@ export default function SubscriptionCardsSection({
   ].slice(0, 3);
 
   return (
-    <div className="px-4 md:py-[100px] py-[50px] bg-white">
+    <div className="px-4 md:py-[100px] py-[50px] bg-[#fbfbfb]">
       <div ref={contentRef} className="max-w-7xl mx-auto">
         {/* Title */}
         <div
