@@ -2,8 +2,8 @@
 
 import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { createCheckoutSession } from "@/app/actions/stripe";
-import { useRevealById } from "@/app/utils/reveal";
 
 interface SubscriptionCardProps {
   image: StaticImageData | string | null;
@@ -14,6 +14,11 @@ interface SubscriptionCardProps {
   priceId: string | null;
 }
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const SubscriptionCard = ({
   image,
   description,
@@ -23,17 +28,6 @@ const SubscriptionCard = ({
   priceId,
 }: SubscriptionCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const imageVisible = useRevealById(`${title}-image`, 0.3);
-  const overlayVisible = useRevealById(`${title}-overlay`, 0.3);
-  const priceVisible = useRevealById(`${title}-price`, 0.3);
-  const listVisible = useRevealById(`${title}-list`, 0.3);
-  const buttonVisible = useRevealById(`${title}-button`, 0.3);
-
-  const animation = (visible: boolean) =>
-    `transition-all duration-700 ease-out ${
-      visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-    }`;
 
   const handleChoose = async () => {
     if (!priceId) {
@@ -62,13 +56,19 @@ const SubscriptionCard = ({
   };
 
   return (
-    <div className="relative flex flex-col shadow-lg rounded-[20px] max-w-[416px] w-full">
+    <motion.div
+      className="relative flex flex-col shadow-lg rounded-[20px] max-w-[416px] w-full"
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      transition={{ duration: 0.7 }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
       {/* Image Section */}
-      <div
-        id={`${title}-image`}
-        className={`relative w-full aspect-square overflow-hidden rounded-[20px] z-50 ${animation(
-          imageVisible,
-        )}`}
+      <motion.div
+        variants={fadeUp}
+        transition={{ duration: 0.7, delay: 0.1 }}
+        className="relative w-full aspect-square overflow-hidden rounded-[20px] z-50"
       >
         {image ? (
           <Image
@@ -84,11 +84,10 @@ const SubscriptionCard = ({
         )}
 
         {/* Overlay */}
-        <div
-          id={`${title}-overlay`}
-          className={`absolute bottom-0 left-0 right-0 p-4 pl-10 pr-10 pt-[200px] bg-linear-to-t from-black to-transparent ${animation(
-            overlayVisible,
-          )}`}
+        <motion.div
+          variants={fadeUp}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="absolute bottom-0 left-0 right-0 p-4 pl-10 pr-10 pt-[200px] bg-linear-to-t from-black to-transparent"
         >
           <h3 className="block text-white font-semibold text-center text-3xl">
             {title}
@@ -96,8 +95,8 @@ const SubscriptionCard = ({
           <span className="block text-[16px] text-center text-[#B7C1C7]">
             {description}
           </span>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Price Section */}
       <div className="relative w-full aspect-square rounded-b-[20px] overflow-hidden bg-white -mt-8">
@@ -120,11 +119,13 @@ const SubscriptionCard = ({
 
         <div className="relative z-10 flex flex-col h-full p-6 justify-between">
           {/* Price */}
-          <div
-            id={`${title}-price`}
-            className={`flex justify-center flex-col pt-6 ${animation(
-              priceVisible,
-            )}`}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.4, delay: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="flex justify-center flex-col pt-6"
           >
             <span className="text-[64px] font-normal text-center">
               R${price}
@@ -132,36 +133,35 @@ const SubscriptionCard = ({
             </span>
 
             <div className="h-px w-full bg-[#9EA9B0]" />
-          </div>
+          </motion.div>
 
           {/* Feature List */}
-          <ul
-            id={`${title}-list`}
-            className={`font-normal text-[16px] sm:text-[20px] text-center text-[#4B575E] pt-6 list-disc list-inside space-y-1 ${animation(
-              listVisible,
-            )}`}
+          <motion.ul
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            transition={{ duration: 0.4, delay: 0.4 }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="font-normal text-[16px] sm:text-[20px] text-center text-[#4B575E] pt-6 list-disc list-inside space-y-1"
           >
             {kitInfo.split("+").map((item, index) => (
               <li key={index} className="text-left">
                 {item.trim()}
               </li>
             ))}
-          </ul>
+          </motion.ul>
 
           {/* Button */}
           <button
-            id={`${title}-button`}
             onClick={handleChoose}
             disabled={isLoading || !priceId}
-            className={`cursor-pointer w-full py-3 px-4 bg-[#007874] text-white font-medium rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${animation(
-              buttonVisible,
-            )}`}
+            className="cursor-pointer w-full py-3 px-4 bg-[#007874] text-white font-medium rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Carregando..." : "Escolher"}
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

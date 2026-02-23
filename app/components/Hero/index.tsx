@@ -1,26 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import UserIcon from "../UserIcon";
 import HeroTyping from "../HeroTyping";
 import background from "@/public/background.jpg";
 import logo from "@/public/logo.png";
-import { useRevealById } from "@/app/utils/reveal";
 
 const Hero = () => {
-  const bgVisible = useRevealById("hero-bg", 0.1);
-  const logoVisible = useRevealById("hero-logo", 0.2);
-  const userVisible = useRevealById("hero-user", 0.3);
-
   return (
-    <div className="w-full h-screen md:h-[646px] relative overflow-hidden">
+    <div className="w-full h-screen md:h-[646px] relative overflow-hidden bg-white">
       {/* Background */}
-      <div
-        id="hero-bg"
-        className={`absolute inset-0 z-0 transition-all duration-1000 ease-out
-          ${
-            bgVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"
-          }`}
+      <motion.div
+        className="absolute inset-0 z-0"
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
       >
         <Image
           src={background}
@@ -29,30 +25,29 @@ const Hero = () => {
           className="object-cover"
           priority
         />
-      </div>
+      </motion.div>
 
       {/* Logo */}
-      <div
-        id="hero-logo"
-        className={`absolute z-20 top-7 left-1/2 -translate-x-1/2 transition-all duration-700 ease-out
-          ${
-            logoVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-8"
-          }`}
+      <motion.div
+        className="absolute z-20 top-7 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
       >
         <Image src={logo} alt="logo" width={86} height={86} priority />
-      </div>
+      </motion.div>
 
       {/* User Icon */}
-      <div
-        id="hero-user"
-        className={`absolute z-20 inset-0 flex items-center justify-center
-    transition-all duration-700 ease-out
-    ${userVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8"}`}
+      <motion.div
+        className="absolute z-20 inset-0 flex items-center justify-center"
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.4 }}
+        viewport={{ once: true, amount: 0.3 }}
       >
         <UserIcon />
-      </div>
+      </motion.div>
 
       <HeroTyping />
     </div>

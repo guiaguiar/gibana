@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRevealById } from "@/app/utils/reveal";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AccordionItemProps {
   question: string;
   answer: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
-  revealId: string;
 }
 
 function AccordionItem({
@@ -16,15 +15,14 @@ function AccordionItem({
   answer,
   isOpen,
   onToggle,
-  revealId,
 }: AccordionItemProps) {
-  const isVisible = useRevealById(revealId, 0.2);
-
   return (
-    <div
-      id={revealId}
-      className={`border-b border-brown/20 last:border-b-0 cursor-pointer transition-all duration-700 ease-out
-        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="border-b border-brown/20 last:border-b-0 cursor-pointer"
     >
       <button
         onClick={onToggle}
@@ -35,10 +33,10 @@ function AccordionItem({
           {question}
         </h3>
 
-        <svg
-          className={`w-6 h-6 text-brown transition-transform duration-300 shrink-0 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+        <motion.svg
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-6 h-6 text-brown shrink-0"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -49,19 +47,26 @@ function AccordionItem({
             strokeWidth={2}
             d="M19 9l-7 7-7-7"
           />
-        </svg>
+        </motion.svg>
       </button>
 
-      <div
-        className={`overflow-hidden transition-all duration-300 ${
-          isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="pb-6 text-gray-700 text-base md:text-lg leading-relaxed">
-          {answer}
-        </div>
-      </div>
-    </div>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <div className="pb-6 text-gray-700 text-base md:text-lg leading-relaxed">
+              {answer}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -71,8 +76,6 @@ export default function ExplanationCard() {
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-
-  const titleVisible = useRevealById("faq-title", 0.2);
 
   const faqItems = [
     {
@@ -116,17 +119,15 @@ export default function ExplanationCard() {
     >
       <div className="max-w-[1132px] mx-auto px-4 md:px-8">
         {/* Title */}
-        <h2
-          id="faq-title"
-          className={`text-3xl md:text-4xl font-normal text-[#4B575E] mb-8 md:mb-12 md:text-left text-center transition-all duration-700 ease-out
-            ${
-              titleVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-3xl md:text-4xl font-normal text-[#4B575E] mb-8 md:mb-12 md:text-left text-center"
         >
           <span className="font-bold">Perguntas</span> Frequentes
-        </h2>
+        </motion.h2>
 
         {/* Accordion */}
         <div className="bg-white/50 rounded-2xl p-6 md:p-8 shadow-lg">
@@ -137,7 +138,6 @@ export default function ExplanationCard() {
               answer={item.answer}
               isOpen={openIndex === index}
               onToggle={() => toggleAccordion(index)}
-              revealId={`faq-item-${index}`}
             />
           ))}
         </div>
