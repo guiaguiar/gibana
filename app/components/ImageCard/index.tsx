@@ -77,25 +77,23 @@ export default function ImageCard({
         )}
       </div>
 
-      {/* Dark overlay on hover/click */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-300 z-0 ${
           showHoverEffect
             ? "opacity-0 group-hover:opacity-50"
             : isContentVisible
-            ? "opacity-50"
-            : "opacity-0"
+              ? "opacity-50"
+              : "opacity-0"
         }`}
       />
 
-      {/* Default text - visible by default, hidden on hover/click */}
       <div
         className={`gap-2 absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-opacity duration-300 ${
           showHoverEffect
             ? "group-hover:opacity-0"
             : isContentVisible
-            ? "opacity-0"
-            : "opacity-100"
+              ? "opacity-0"
+              : "opacity-100"
         }`}
       >
         <span className="text-white font-bold text-4xl md:text-5xl z-10 [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)] uppercase text-center">
@@ -106,7 +104,6 @@ export default function ImageCard({
             PRINT CLUB
           </span>
         )}
-        {/* "Saiba mais" text for mobile/tablet */}
         {isMobileOrTablet && title && (
           <span className="text-white font-semibold text-lg md:text-xl z-10 [text-shadow:3px_3px_20px_rgba(0,0,0,0.7)] opacity-80">
             Saiba mais
@@ -114,15 +111,14 @@ export default function ImageCard({
         )}
       </div>
 
-      {/* Hover/Click content - hidden by default, visible on hover/click */}
       {title && (
         <div
           className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-opacity duration-300 p-6 ${
             showHoverEffect
               ? "opacity-0 group-hover:opacity-100"
               : isContentVisible
-              ? "opacity-100"
-              : "opacity-0"
+                ? "opacity-100"
+                : "opacity-0"
           }`}
         >
           <div
@@ -130,8 +126,8 @@ export default function ImageCard({
               showHoverEffect
                 ? "transform translate-y-8 group-hover:translate-y-0"
                 : isContentVisible
-                ? "transform translate-y-0"
-                : "transform translate-y-8"
+                  ? "transform translate-y-0"
+                  : "transform translate-y-8"
             }`}
           >
             <h3 className="font-extrabold text-3xl md:text-3xl text-center text-white uppercase leading-tight">

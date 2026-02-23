@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import IconButton from "./IconButton";
+import IconButton from "../IconButton";
 
 export default function UserIcon() {
   const router = useRouter();

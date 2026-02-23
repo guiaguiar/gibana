@@ -7,14 +7,12 @@ export default function StripePricingTable() {
   const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 
   useEffect(() => {
-    // Load Stripe.js script for pricing table
     const script = document.createElement("script");
     script.src = "https://js.stripe.com/v3/pricing-table.js";
     script.async = true;
     document.body.appendChild(script);
 
     return () => {
-      // Cleanup: remove script on unmount
       if (document.body.contains(script)) {
         document.body.removeChild(script);
       }
@@ -34,7 +32,7 @@ export default function StripePricingTable() {
 
   return (
     <div className="w-full flex justify-center py-8">
-      {/* @ts-ignore - Stripe Pricing Table web component */}
+      {/* @ts-expect-error - Stripe Pricing Table web component */}
       <stripe-pricing-table
         pricing-table-id={pricingTableId}
         publishable-key={publishableKey}

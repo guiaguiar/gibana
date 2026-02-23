@@ -39,13 +39,11 @@ export async function getStripeProducts(): Promise<StripeProduct[]> {
       throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
     }
 
-    // Fetch all active products
     const products = await stripe.products.list({
       active: true,
       expand: ["data.default_price"],
     });
 
-    // Transform Stripe products to our format
     const formattedProducts: StripeProduct[] = await Promise.all(
       products.data.map(async (product) => {
         const priceId =
@@ -79,7 +77,7 @@ export async function getStripeProducts(): Promise<StripeProduct[]> {
           price_interval,
           metadata: product.metadata,
         };
-      })
+      }),
     );
 
     return formattedProducts;
@@ -95,7 +93,7 @@ export async function getStripeProducts(): Promise<StripeProduct[]> {
  * @returns Product details with price information
  */
 export async function getStripeProduct(
-  productId: string
+  productId: string,
 ): Promise<StripeProduct | null> {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -149,7 +147,7 @@ export async function getStripeProduct(
  * @returns Price information
  */
 export async function getStripePrice(
-  priceId: string
+  priceId: string,
 ): Promise<StripePrice | null> {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -183,17 +181,15 @@ export async function getStripePrice(
  */
 export async function createCheckoutSession(
   priceId: string,
-  customerId?: string | null
+  customerId?: string | null,
 ): Promise<{ url: string | null; error: string | null }> {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
     }
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    // Fetch price to determine if it's recurring or one-time
     const price = await stripe.prices.retrieve(priceId);
     const isRecurring = !!price.recurring;
     const mode: "subscription" | "payment" = isRecurring
@@ -210,7 +206,6 @@ export async function createCheckoutSession(
         },
       ],
 
-      // ✅ Force full billing address + name collection
       billing_address_collection: "required",
       shipping_address_collection: {
         allowed_countries: ["BR"],
@@ -220,11 +215,9 @@ export async function createCheckoutSession(
       locale: "pt-BR",
     };
 
-    // Associate session with existing Stripe customer (if provided)
     if (customerId) {
       sessionParams.customer = customerId;
 
-      // Automatically update customer address with collected data
       sessionParams.customer_update = {
         address: "auto",
         name: "auto",
@@ -256,7 +249,7 @@ export async function createCheckoutSession(
  * @returns Portal session URL or error message
  */
 export async function handleManageSubscription(
-  email: string
+  email: string,
 ): Promise<{ url: string | null; error: string | null }> {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -265,7 +258,6 @@ export async function handleManageSubscription(
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    // Validate email format
     if (!email || !email.includes("@")) {
       return {
         url: null,
@@ -273,7 +265,6 @@ export async function handleManageSubscription(
       };
     }
 
-    // Search for customer by email (Stripe is our only database)
     const customers = await stripe.customers.list({
       email: email.trim().toLowerCase(),
       limit: 1,
@@ -289,7 +280,6 @@ export async function handleManageSubscription(
 
     const customer = customers.data[0];
 
-    // Create billing portal session
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customer.id,
       return_url: `${baseUrl}/minha-conta`,
