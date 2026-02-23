@@ -8,7 +8,7 @@ const PresentationSection = () => {
   return (
     <div className="bg-[#FBFBFB] flex flex-col items-center justify-center">
       <div className="max-w-7xl mx-auto px-4 min-[1045px]:px-8 ">
-        <div className="flex flex-col min-[1045px]:flex-row items-center gap-14 min-[1236px]:py-[120px] pt-[60px]">
+        <div className="flex flex-col min-[1045px]:flex-row items-center gap-10 md:gap-14 min-[1236px]:py-[120px] pt-[50px]">
           <div className="contents min-[1045px]:flex min-[1045px]:flex-col min-[1045px]:order-2 min-[1045px]:flex-1">
             <h1 className="order-1 min-[1045px]:text-[52px] text-[32px] font-distrampler text-[#99623B] pb-[10px] text-center min-[1045px]:text-left">
               Oi, eu sou a gibana.
@@ -25,8 +25,8 @@ const PresentationSection = () => {
               muito sentido para mim. Espero te impactar com o que crio, feito
               por uma pessoa real - direto do meu ateliê para o seu correio.
             </span>
-            <div className="order-4 flex items-center flex-col min-[1045px]:flex-row justify-between gap-2 min-[1236px]:pt-[41px]">
-              <span className="text-[32px] font-distrampler text-[#007874]">
+            <div className="order-4 flex items-center flex-col min-[1045px]:flex-row justify-between gap-4 min-[1236px]:pt-[41px]">
+              <span className="md:text-[32px] text-[27px] font-distrampler text-[#007874]">
                 me siga nas redes sociais :)
               </span>
               <div className="flex items-center gap-2 bg-[#007874] rounded-full p-2">
@@ -55,14 +55,14 @@ const PresentationSection = () => {
           </div>
         </div>
       </div>
-      <div className="flex min-[1236px]:gap-0 gap-[120px] flex-col min-[1236px]:flex-row items-center justify-between p-[54px] max-w-[1480px] w-full relative">
+      <div className="flex min-[1236px]:gap-0 gap-[120px] flex-col min-[1236px]:flex-row items-center justify-between md:p-[54px] p-[16px] max-w-[1480px] w-full relative pt-8">
         <span className="text-[16px] min-[1236px]:text-[20px] font-josefin-sans text-[#4B575E]">
           © 2026 gibana. todos os direitos reservados.
         </span>
         <Image
           src={logo}
           alt="logo"
-          className="absolute z-10 min-[1236px]:top-0 top-[100px] left-1/2 -translate-x-1/2"
+          className="absolute z-10 min-[1236px]:top-0 top-[75px] left-1/2 -translate-x-1/2"
           width={82}
           height={82}
         />

@@ -6,6 +6,7 @@ import ExplanationCard from "./components/ExplanationCard";
 import UserIcon from "./components/UserIcon";
 import SubscriptionCardsSection from "./components/SubscriptionCardsSection";
 import PresentationSection from "./components/PresentationSection";
+import HeroTyping from "./components/HeroTyping";
 
 // Enable ISR: revalidate every hour (3600 seconds)
 // This allows Stripe data changes to be picked up without rebuilding the app
@@ -37,19 +38,7 @@ export default async function Home() {
           height={86}
         />
 
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-          <span className="font-distrampler font-normal md:text-[52px] text-[32px] leading-[1.2] tracking-normal text-center text-[#99623B]">
-            Algo feito à mão para
-            <br />
-            você esperar todo mês
-          </span>
-          <span
-            className="font-normal text-[32px] md:pt-[24px]"
-            style={{ fontFamily: "var(--font-annie), sans-serif" }}
-          >
-            Com carinho, gibana.
-          </span>
-        </div>
+        <HeroTyping />
       </div>
 
       <SubscriptionCardsSection products={stripeProducts} />

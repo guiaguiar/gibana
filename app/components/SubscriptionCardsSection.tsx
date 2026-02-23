@@ -20,10 +20,18 @@ export default function SubscriptionCardsSection({
   ].slice(0, 3);
 
   return (
-    <div className="px-4 py-[100px] items-center bg-white">
-      <div className="flex w-full items-center justify-center pb-18">
+    <div className="px-4 md:py-[100px] py-[50px] items-center bg-white">
+      <div className="flex w-full items-center justify-center md:pb-18">
         <span className="text-2xl font-semibold text-center text-[40px] text-[#99623B]">
           Assinaturas
+        </span>
+      </div>
+      <div className="flex w-full items-center justify-center flex-col pt-2 pb-6 md:hidden">
+        <span className="font-thin text-center text-[24px]">
+          Próxima data de envio:
+        </span>
+        <span className="font-medium text-[#99623B] text-[24px]">
+          15 de Fevereiro
         </span>
       </div>
       <div className="flex flex-col min-[1070px]:flex-row gap-8 min-[1070px]:gap-4 max-w-7xl mx-auto items-center justify-center md:justify-between">
@@ -44,12 +52,10 @@ export default function SubscriptionCardsSection({
           </div>
         ))}
       </div>
-      <div className="flex w-full items-center justify-center pt-24">
-        <span className="font-thin text-center md:text-[40px] text-[24px]">
-          Próxima data de envio:
-          <br className="md:hidden" />
-          <span className="font-medium text-[#99623B] md:text-[46px] text-[24px]">
-            {" "}
+      <div className="hidden md:flex w-full items-center justify-center pt-24">
+        <span className="font-thin text-center text-[40px]">
+          Próxima data de envio:{" "}
+          <span className="font-medium text-[#99623B] text-[46px]">
             15 de Fevereiro
           </span>
         </span>
