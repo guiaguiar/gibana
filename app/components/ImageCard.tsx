@@ -69,6 +69,7 @@ export default function ImageCard({
             alt={alt}
             fill
             className="object-cover"
+            priority
             {...(typeof image === "string" && { unoptimized: true })}
           />
         ) : (

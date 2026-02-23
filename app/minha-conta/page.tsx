@@ -37,7 +37,7 @@ export default function MinhaContaPage() {
 
   return (
     <div className="min-h-screen relative">
-      <Image src={background} alt="background" fill className="object-cover" />
+      <Image src={background} alt="background" fill className="object-cover" priority />
       <div className="relative z-10 px-8 py-8">
         <div className="flex items-center justify-center pb-10 pt-4">
           <Image
@@ -46,6 +46,7 @@ export default function MinhaContaPage() {
             width={100}
             height={100}
             className="w-[60px] h-[60px] md:w-[100px] md:h-[100px]"
+            priority
           />
         </div>
 

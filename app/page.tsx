@@ -1,12 +1,8 @@
-import Image from "next/image";
-import background from "@/public/background.jpg";
-import logo from "@/public/logo.png";
 import { getStripeProducts } from "@/app/actions/stripe";
 import ExplanationCard from "./components/ExplanationCard";
-import UserIcon from "./components/UserIcon";
 import SubscriptionCardsSection from "./components/SubscriptionCardsSection";
 import PresentationSection from "./components/PresentationSection";
-import HeroTyping from "./components/HeroTyping";
+import Hero from "./components/Hero";
 
 // Enable ISR: revalidate every hour (3600 seconds)
 // This allows Stripe data changes to be picked up without rebuilding the app
@@ -15,31 +11,10 @@ export const revalidate = 3600;
 export default async function Home() {
   // Fetch products server-side
   const stripeProducts = await getStripeProducts();
-  console.log("📦 Stripe Products fetched:", stripeProducts);
-  console.log("📦 Number of products:", stripeProducts.length);
 
   return (
     <div className="h-full">
-      <div className="w-full h-screen md:h-[646px] relative">
-        <UserIcon />
-
-        <Image
-          src={background}
-          alt="background"
-          fill
-          className="object-cover"
-        />
-
-        <Image
-          src={logo}
-          alt="logo"
-          className="absolute z-10 top-7 left-1/2 -translate-x-1/2"
-          width={86}
-          height={86}
-        />
-
-        <HeroTyping />
-      </div>
+      <Hero />
 
       <SubscriptionCardsSection products={stripeProducts} />
 

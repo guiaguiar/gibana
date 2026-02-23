@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRevealById } from "@/app/utils/reveal";
 
 interface AccordionItemProps {
   question: string;
   answer: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
+  revealId: string;
 }
 
 function AccordionItem({
@@ -14,17 +16,25 @@ function AccordionItem({
   answer,
   isOpen,
   onToggle,
+  revealId,
 }: AccordionItemProps) {
+  const isVisible = useRevealById(revealId, 0.2);
+
   return (
-    <div className="border-b border-brown/20 last:border-b-0 cursor-pointer">
+    <div
+      id={revealId}
+      className={`border-b border-brown/20 last:border-b-0 cursor-pointer transition-all duration-700 ease-out
+        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+    >
       <button
         onClick={onToggle}
-        className="w-full py-6 text-left flex items-center justify-between gap-4 hover:opacity-80 transition-opacity cursor-pointer"
+        className="w-full py-6 text-left flex items-center justify-between gap-4 hover:opacity-80 transition-opacity"
         aria-expanded={isOpen}
       >
         <h3 className="font-normal text-xl md:text-3xl text-brown flex-1">
           {question}
         </h3>
+
         <svg
           className={`w-6 h-6 text-brown transition-transform duration-300 shrink-0 ${
             isOpen ? "rotate-180" : ""
@@ -41,44 +51,14 @@ function AccordionItem({
           />
         </svg>
       </button>
+
       <div
-        className={`cursor-default overflow-hidden transition-all duration-300 ${
+        className={`overflow-hidden transition-all duration-300 ${
           isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="pb-6 text-gray-700 text-base md:text-lg leading-relaxed">
-          {(() => {
-            // Extract children if answer is a div with children
-            if (
-              typeof answer === "object" &&
-              answer !== null &&
-              "props" in answer
-            ) {
-              const answerObj = answer as {
-                props?: { children?: React.ReactNode };
-              };
-              const children = answerObj.props?.children;
-              if (Array.isArray(children)) {
-                return (
-                  <div className="flex flex-col gap-3">
-                    {children.map((child: React.ReactNode, idx: number) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <span className="text-brown mt-2 shrink-0">•</span>
-                        <div className="flex-1">{child}</div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              }
-            }
-            // Fallback for other cases
-            return (
-              <div className="flex items-start gap-3">
-                <span className="text-brown mt-2 shrink-0">•</span>
-                <div className="flex-1">{answer}</div>
-              </div>
-            );
-          })()}
+          {answer}
         </div>
       </div>
     </div>
@@ -92,57 +72,39 @@ export default function ExplanationCard() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  const titleVisible = useRevealById("faq-title", 0.2);
+
   const faqItems = [
     {
       question: "O que é um Print Club?",
       answer: (
-        <div className="flex flex-col gap-3">
+        <>
           <p>
             Print Club é um clube de assinatura mensal, onde você recebe todos
-            os meses uma carta por correio com o print A5 de uma arte e outros
-            itens feitos e projetados todos por mim, Gibana.
+            os meses uma carta por correio com o print A5 de uma arte.
           </p>
           <p>
             A ideia é tornar a minha arte mais acessível e você receber algo
-            exclusivo e original.
+            exclusivo.
           </p>
-        </div>
+        </>
       ),
     },
     {
       question: "Como funciona o envio?",
       answer: (
-        <div className="flex flex-col gap-3">
-          <p>
-            As correspondências serão enviadas até o dia 15 de cada mês. Você
-            deve se inscrever até o dia 12 do mês, para receber a impressão
-            daquele mês.
-          </p>
-          <p>
-            O frete é grátis para todo o Brasil, para manter o valor acessível
-            as cartas não incluem informações de rastreamento.
-          </p>
-        </div>
+        <>
+          <p>As correspondências serão enviadas até o dia 15 de cada mês.</p>
+          <p>O frete é grátis para todo o Brasil.</p>
+        </>
       ),
     },
     {
-      question: "Vocês aceitam reembolso e devoluções?",
+      question: "Vocês aceitam reembolso?",
       answer: (
-        <div className="flex flex-col gap-3">
-          <p>
-            <span className="font-medium">
-              Em caso de encomenda danificada:
-            </span>{" "}
-            por favor, entre em contato comigo e envie fotos e detalhes,
-            encontraremos a melhor solução juntos.
-          </p>
-          <p>
-            <span className="font-medium">
-              Para correspondências extraviadas:
-            </span>{" "}
-            terei prazer em reenviar sua correspondência.
-          </p>
-        </div>
+        <>
+          <p>Em caso de encomenda danificada, entre em contato comigo.</p>
+        </>
       ),
     },
   ];
@@ -153,9 +115,20 @@ export default function ExplanationCard() {
       style={{ backgroundColor: "#FCECCB" }}
     >
       <div className="max-w-[1132px] mx-auto px-4 md:px-8">
-        <h2 className="text-3xl md:text-4xl font-normal text-[#4B575E] mb-8 md:mb-12 md:text-left text-center">
+        {/* Title */}
+        <h2
+          id="faq-title"
+          className={`text-3xl md:text-4xl font-normal text-[#4B575E] mb-8 md:mb-12 md:text-left text-center transition-all duration-700 ease-out
+            ${
+              titleVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
+        >
           <span className="font-bold">Perguntas</span> Frequentes
         </h2>
+
+        {/* Accordion */}
         <div className="bg-white/50 rounded-2xl p-6 md:p-8 shadow-lg">
           {faqItems.map((item, index) => (
             <AccordionItem
@@ -164,6 +137,7 @@ export default function ExplanationCard() {
               answer={item.answer}
               isOpen={openIndex === index}
               onToggle={() => toggleAccordion(index)}
+              revealId={`faq-item-${index}`}
             />
           ))}
         </div>

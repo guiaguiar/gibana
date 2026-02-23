@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const typingSpeed = 30; // lower = faster
+
 export default function HeroTyping() {
   const firstLine = "Algo feito à mão para";
   const secondLine = "você esperar todo mês";
@@ -26,7 +28,7 @@ export default function HeroTyping() {
         clearInterval(interval);
         setFirstDone(true);
       }
-    }, 40);
+    }, typingSpeed);
 
     return () => clearInterval(interval);
   }, []);
@@ -45,7 +47,7 @@ export default function HeroTyping() {
         clearInterval(interval);
         setSecondDone(true);
       }
-    }, 40);
+    }, typingSpeed);
 
     return () => clearInterval(interval);
   }, [firstDone]);
@@ -63,14 +65,13 @@ export default function HeroTyping() {
       } else {
         clearInterval(interval);
       }
-    }, 40);
+    }, typingSpeed);
 
     return () => clearInterval(interval);
   }, [secondDone]);
 
   return (
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-      
       {/* First Line */}
       <div className="md:h-[62px] h-[38px] flex items-center justify-center">
         <span className="font-distrampler font-normal md:text-[52px] text-[32px] leading-[1.2] tracking-normal text-center text-[#99623B]">
