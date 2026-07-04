@@ -98,7 +98,7 @@ export default function SubscriptionCardsSection({
           <span className="font-thin text-center text-[40px]">
             Próxima data de envio:{" "}
             <span className="font-medium text-[#99623B] text-[46px]">
-              15 de Fevereiro
+              15 de Agosto
             </span>
           </span>
         </motion.div>

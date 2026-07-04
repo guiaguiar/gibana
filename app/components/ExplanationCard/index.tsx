@@ -106,7 +106,7 @@ export default function ExplanationCard() {
       question: "Vocês aceitam reembolso?",
       answer: (
         <>
-          <p>Em caso de encomenda danificada, entre em contato comigo.</p>
+          <p>Em caso de encomenda danificada, entre em contato comigo em gibana.maximo@gmail.com.</p>
         </>
       ),
     },
