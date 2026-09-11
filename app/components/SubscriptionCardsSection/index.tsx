@@ -11,13 +11,9 @@ interface SubscriptionCardsSectionProps {
 export default function SubscriptionCardsSection({
   products,
 }: SubscriptionCardsSectionProps) {
-  const singleProducts = products.filter((p) => p.metadata.type === "single");
-  const multiProduct = products.find((p) => p.metadata.type === "multi");
-
-  const displayedProducts = [
-    ...singleProducts.slice(0, 2),
-    ...(multiProduct ? [multiProduct] : []),
-  ].slice(0, 3);
+  const displayedProducts = products
+    .filter((p) => p.metadata.type === "single")
+    .slice(0, 1);
 
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -68,12 +64,12 @@ export default function SubscriptionCardsSection({
           </span>
         </motion.div>
 
-        <div className="flex flex-col min-[1070px]:flex-row gap-8 min-[1070px]:gap-4 items-center justify-center md:justify-between">
+        <div className="flex items-center justify-center">
           {displayedProducts.map((product) => (
             <motion.div
               key={product.id}
               variants={fadeUp}
-              className="w-full max-w-[416px] flex-1"
+              className="w-full max-w-[416px]"
             >
               <SubscriptionCard
                 image={
